@@ -16,31 +16,42 @@ class BZ2TextFileStreamer:
     and process very large text files line-by-line efficiently.
     '''
 
-    def __init__(self, bz2_file, encoding='utf-8', read_size=512, lb='\n'):
+    def __init__(self, bz2_file=None, encoding='utf-8', read_size=512, lb='\n'):
         '''
         Sets up the streamer.
 
-        :param bz2_file: path to the bzip2 compressed file
+        :param bz2_file: path to the bzip2 compressed file, or None
         :param encoding: Text encoding
         :param read_size: Number of bytes to read at a time
         :param lb: Linebreak to look for (\n by default)
         '''
-        self.file = open(bz2_file, 'rb')
+        self.file = None
         self.encoding = encoding
         self.read_size = read_size
         self.linebreak = lb
 
-    def close(self):
+        if bz2_file is not None:
+            self.file = open(bz2_file, 'rb')
+
+    def set_file(self, file):
+        '''
+        Sets the file stream manually, in case you prefer to open the file
+        yourself.
+        '''
+        self.file = file
+
+    def _close(self):
         '''
         Closes the file.
         '''
-        self.file.close()
+        if self.file is not None:
+            self.file.close()
 
     def __del__(self):
         '''
         Ensures that the file is closed on destruction.
         '''
-        self.close()
+        self._close()
 
     def __iter__(self):
         '''
@@ -58,7 +69,7 @@ class BZ2TextFileStreamer:
                 # File has reached EOF, so close it and stop iteration
                 # after yielding the remaining line of the file.
                 yield buffer
-                self.close()
+                self._close()
                 return
 
             # Decompress bytes and interpret using the correct encoding.
@@ -69,6 +80,6 @@ class BZ2TextFileStreamer:
                 lines = buffer.split(self.linebreak)
 
                 for line in lines[:-1]:
-                    yield line
+                    yield line + self.linebreak
 
                 buffer = lines[-1]
