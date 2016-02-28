@@ -16,19 +16,20 @@ class BZ2TextFileStreamer:
     and process very large text files line-by-line efficiently.
     '''
 
-    def __init__(self, bz2_file=None, encoding='utf-8', read_size=512, lb='\n'):
+    def __init__(self, bz2_file=None, encoding='utf-8', read_size=512,
+                 linebreak='\n'):
         '''
         Sets up the streamer.
 
         :param bz2_file: path to the bzip2 compressed file, or None
         :param encoding: Text encoding
         :param read_size: Number of bytes to read at a time
-        :param lb: Linebreak to look for (\n by default)
+        :param linebreak: Linebreak to look for (\n by default)
         '''
         self.file = None
         self.encoding = encoding
         self.read_size = read_size
-        self.linebreak = lb
+        self.linebreak = linebreak
 
         if bz2_file is not None:
             self.file = open(bz2_file, 'rb')
