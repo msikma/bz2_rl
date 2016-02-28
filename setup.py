@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
     name='bz2_rl',
-    version='1.0.0',
+    version='1.0.1',
     description=(
         'Helper class for processing large bzip2 compressed text files '
         'efficiently without high memory usage.'
