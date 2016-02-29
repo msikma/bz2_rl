@@ -17,7 +17,7 @@ class BZ2TextFileStreamer:
     '''
 
     def __init__(self, bz2_file=None, encoding='utf-8', read_size=512,
-                 linebreak='\n'):
+                 linebreak=b'\n'):
         '''
         Sets up the streamer.
 
@@ -60,7 +60,7 @@ class BZ2TextFileStreamer:
         full lines explicitly terminated by a linebreak.
         '''
         # String buffer that will contain decompressed text.
-        buffer = ''
+        buffer = b''
 
         while True:
             # Read a series of compressed bytes.
@@ -69,18 +69,18 @@ class BZ2TextFileStreamer:
             if file_bytes == b'':
                 # File has reached EOF, so close it and stop iteration
                 # after yielding the remaining line of the file.
-                yield buffer
+                yield buffer.decode(self.encoding)
                 self._close()
                 return
 
             # Decompress bytes and interpret using the correct encoding.
-            buffer += bz2de.decompress(file_bytes).decode(self.encoding)
+            buffer += bz2de.decompress(file_bytes)
 
             # Yield lines if we have any; put the remainder back in the buffer.
             if self.linebreak in buffer:
                 lines = buffer.split(self.linebreak)
 
                 for line in lines[:-1]:
-                    yield line + self.linebreak
+                    yield (line + self.linebreak).decode(self.encoding)
 
                 buffer = lines[-1]
