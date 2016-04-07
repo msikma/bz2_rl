@@ -4,11 +4,11 @@
 '''
 Installation configuration.
 '''
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='bz2_rl',
-    version='1.0.2',
+    version='2.0.0',
     description=(
         'Helper class for processing large bzip2 compressed text files '
         'efficiently without high memory usage.'
@@ -17,8 +17,8 @@ setup(
     author='Michiel Sikma',
     author_email='michiel@sikma.org',
     license='MIT',
-    test_suite='bz2_rl.tests.test_bz2_rl',
-    packages=['bz2_rl'],
+    test_suite='bz2_rl.tests',
+    packages=find_packages(),
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

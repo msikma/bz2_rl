@@ -3,4 +3,4 @@
 '''
 Module to stream through a bzip2 compressed text file and yield its lines.
 '''
-from .bz2_rl import BZ2TextFileStreamer
+from .bz2fileiter import BZ2FileIter
